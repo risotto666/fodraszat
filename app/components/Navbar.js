@@ -20,7 +20,7 @@ export default function Nav() {
     <Navbar fluid rounded className="fixed w-full">
       <Link to="hero" smooth={true} duration={500}>
         <NavbarBrand href="/">
-          <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+          <span className="self-center text-slate-600 bg-slate-200 p-2 rounded-3xl whitespace-nowrap text-xl font-semibold dark:text-white">
             Bolyhos hajszalon
           </span>
         </NavbarBrand>
