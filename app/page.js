@@ -3,6 +3,10 @@ import Info from "./components/Info";
 import Services from "./components/Services";
 import About from "./components/About";
 import Nav from "./components/Navbar";
+import { Gallery } from "./components/Gallery";
+import Footer from "./components/Footer";
+import MapSection from "./components/Map";
+
 /* git add .
 git commit -m "változtatás leírása"
 git push
@@ -17,6 +21,9 @@ export default function Home() {
       <Info />
       <About />
       <Services />
+      <Gallery />
+      <MapSection />
+      <Footer />
     </>
   );
 }

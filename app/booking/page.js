@@ -26,6 +26,7 @@ export default function IdopontFoglalas() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState("");
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [selectService, setSelectService] = useState("");
   const [availableTimes, setAvailableTimes] = useState([]);
 
@@ -72,7 +73,7 @@ export default function IdopontFoglalas() {
     fetchFoglalasok();
   }, [selectedDate]);
 
-  const handleSubmit = async (e) => {
+  /*  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedDate || !selectedTime) return;
 
@@ -92,6 +93,52 @@ export default function IdopontFoglalas() {
       alert(`Foglalás sikeres: ${datum} ${selectedTime}`);
       setSelectedTime("");
       setSelectedDate(null);
+    }
+  }; */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedDate || !selectedTime) return;
+
+    const datum = format(selectedDate, "yyyy-MM-dd");
+
+    // Az adatok, amiket küldeni fogunk az API-nak
+    const formData = {
+      name,
+      email,
+      selectedDate: datum,
+      selectedTime,
+      selectService,
+    };
+
+    // Foglalás mentése a Supabase-be
+    const { error } = await supabase.from("foglalt_idopontok").insert([
+      {
+        datum,
+        ido: selectedTime,
+        nev: name,
+        szolgaltatas: selectService,
+      },
+    ]);
+
+    if (error) {
+      alert("Hiba történt a mentés során: " + error.message);
+    } else {
+      // Küldés a backendre (API route)
+      const res = await fetch("/api/book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(`Foglalás sikeres: ${datum} ${selectedTime}`);
+        setSelectedTime("");
+        setSelectedDate(null);
+      } else {
+        alert(data.message || "Hiba történt az e-mail küldése során");
+      }
     }
   };
 
@@ -144,8 +191,16 @@ export default function IdopontFoglalas() {
             </select>
             <input
               required
+              type="text"
               onChange={(e) => setName(e.target.value)}
               placeholder="Teljes nev"
+              className="my-4 w-full p-2 rounded-3xl bg-slate-100"
+            />
+            <input
+              required
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="E-mail"
               className="my-4 w-full p-2 rounded-3xl bg-slate-100"
             />
           </>
@@ -161,7 +216,7 @@ export default function IdopontFoglalas() {
       </form>
       <Link href="/">
         <Button outline className="mx-auto mt-4">
-          Vissza a fooldalra
+          Vissza a főoldalra
         </Button>
       </Link>
     </div>
