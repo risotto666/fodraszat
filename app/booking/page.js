@@ -144,6 +144,7 @@ export default function IdopontFoglalas() {
       } else {
         alert(data.message || "Hiba történt az e-mail küldése során");
       }
+      setComment("");
       setLoading(false);
     }
   };
