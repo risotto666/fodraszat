@@ -4,7 +4,7 @@ import { Element } from "react-scroll";
 export function Gallery() {
   return (
     <Element name="gallery">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
         <div class="grid gap-4">
           <div>
             <img

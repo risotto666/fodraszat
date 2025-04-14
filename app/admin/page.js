@@ -34,6 +34,7 @@ export default async function AdminPage() {
               <th className="px-4 py-2 text-left">Idő</th>
               <th className="px-4 py-2 text-left">Dátum</th>
               <th className="px-4 py-2 text-left">Szolgáltatás</th>
+              <th className="px-4 py-2 text-left">Megjegyzés</th>
             </tr>
           </thead>
           <tbody>
@@ -56,6 +57,7 @@ export default async function AdminPage() {
                   <td className="px-4 py-2">{reservation.ido}</td>
                   <td className="px-4 py-2">{reservation.datum}</td>
                   <td className="px-4 py-2">{reservation.szolgaltatas}</td>
+                  <td className="px-4 py-2">{reservation.megjegyzes}</td>
                 </tr>
               );
             })}

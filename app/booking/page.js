@@ -28,7 +28,9 @@ export default function IdopontFoglalas() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [selectService, setSelectService] = useState("");
+  const [comment, setComment] = useState("");
   const [availableTimes, setAvailableTimes] = useState([]);
+  const [loading, setLoading] = useState(false); // új állapot
 
   const generateTimeOptions = () => {
     const times = [];
@@ -98,6 +100,7 @@ export default function IdopontFoglalas() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedDate || !selectedTime) return;
+    setLoading(true);
 
     const datum = format(selectedDate, "yyyy-MM-dd");
 
@@ -108,6 +111,7 @@ export default function IdopontFoglalas() {
       selectedDate: datum,
       selectedTime,
       selectService,
+      comment,
     };
 
     // Foglalás mentése a Supabase-be
@@ -117,6 +121,7 @@ export default function IdopontFoglalas() {
         ido: selectedTime,
         nev: name,
         szolgaltatas: selectService,
+        megjegyzes: comment,
       },
     ]);
 
@@ -139,6 +144,7 @@ export default function IdopontFoglalas() {
       } else {
         alert(data.message || "Hiba történt az e-mail küldése során");
       }
+      setLoading(false);
     }
   };
 
@@ -203,15 +209,25 @@ export default function IdopontFoglalas() {
               placeholder="E-mail"
               className="my-4 w-full p-2 rounded-3xl bg-slate-100"
             />
+            <textarea
+              placeholder="Megjegyzés..."
+              className="w-full bg-slate-100 "
+              rows={3}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              maxLength={100}
+            />
           </>
         )}
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-          disabled={!selectedDate || !selectedTime}
+          className="w-full bg-blue-600 disabled:opacity-50 text-white py-2 px-4 rounded hover:bg-blue-700"
+          disabled={
+            !selectedDate || !selectedTime || loading || !name || !email
+          }
         >
-          Foglalás
+          {loading ? "Feldolgozás..." : "Foglalás"}
         </button>
       </form>
       <Link href="/">

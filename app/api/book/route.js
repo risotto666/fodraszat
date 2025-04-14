@@ -1,12 +1,15 @@
 import nodemailer from "nodemailer";
 import { format } from "date-fns";
+import { hu } from "date-fns/locale";
 
 export async function POST(req) {
-  const { name, email, selectedDate, selectedTime, selectService } =
+  const { name, email, selectedDate, selectedTime, selectService, comment } =
     await req.json();
 
   // Dátum és idő formázása
-  const formattedDate = format(new Date(selectedDate), "yyyy. MMMM dd."); // 2025. április 11.
+  const formattedDate = format(new Date(selectedDate), "yyyy. MMMM dd.", {
+    locale: hu,
+  }); // 2025. április 11.
   const formattedTime = format(
     new Date(`${selectedDate}T${selectedTime}`),
     "HH:mm"
@@ -25,15 +28,35 @@ export async function POST(req) {
     from: "troli0723@gmail.com",
     to: email,
     subject: "Foglalás visszaigazolása",
-    text: `Kedves ${name},\n\nKöszönjük a foglalást!\n\nIdőpont: ${formattedDate} ${formattedTime}\nSzolgáltatás: ${selectService}\n\nHamarosan találkozunk!\n\nBolyhos Hajszalon`,
+
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+        <h2>Kedves ${name}!</h2>
+        <p>Köszönjük a foglalást!</p>
+        <p><strong>Időpont:</strong> ${formattedDate} ${formattedTime}</p>
+        <p><strong>Szolgáltatás:</strong> ${selectService}</p>
+  
+        <p>Hamarosan találkozunk!</p>
+  
+        <img 
+          src="https://i.postimg.cc/N0cVjyqs/temp-Imagefi-Ph-Qp.avif" 
+          alt="Bolyhos Hajszalon" 
+          style="margin-top: 20px; width: 150px;" 
+        />
+  
+        <p style="margin-top: 30px;">Üdvözlettel:<br><strong>Bolyhos Hajszalon</strong></p>
+      </div>
+    `,
   };
 
+  //https://imgur.com/a/Siw0hqi
   // Neked értesítő e-mail
   const notifyMail = {
     from: "troli0723@gmail.com",
     to: "troli0723@gmail.com",
     subject: "Új foglalás a szalonban",
-    text: `Új foglalás érkezett:\n\nNév: ${name}\nEmail: ${email}\nDátum: ${formattedDate}\nIdőpont: ${formattedTime}\nSzolgáltatás: ${selectService}`,
+
+    text: `Új foglalás érkezett:\n\nNév: ${name}\nEmail: ${email}\nDátum: ${formattedDate}\nIdőpont: ${formattedTime}\nSzolgáltatás: ${selectService}\nMegjegyzés: ${comment}`,
   };
 
   try {
